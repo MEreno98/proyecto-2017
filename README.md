@@ -1,4 +1,4 @@
-# Proyecto DAM 2017
+# Proyecto DAM 2017 - Grupo 02
 
 Repositorio del módulo de proyecto de Desarrollo de Aplicaciones Multiplataforma en [Egibide Arriaga](http://www.egibide.org/2/es/25/donde-nos-encontramos.html).
 
