@@ -2558,37 +2558,3 @@
 				}
 
 	}
-.termostatoFondo{
-	border:5px solid black;	
-	border-radius: 25px;
-}
-
-.termostatoFondo table{
-	font-size:14px;	
-}
-.termostatoFondo table td{
-	/*padding:0px;*/
-}
-
-#programadasHoras td{
-	padding-bottom:5px;
-}
-#horasTemp table td{
-	//border:1px solid black;	
-}
-.punto{
-	font-size:5px !important;
-}
-
-fieldset{
-	width:85%;
-	border-width: 2px;
-    border-style: groove;
-    border-color: threedface;
-    border-image: initial;
-}	
-fieldset legend{
-    text-align: left;
-    margin-left: 10px;
-}	
-	
