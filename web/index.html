@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
 		<link href="assets/css/prettify.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
 		
 		<script type="text/javascript" src="scripts/js/fusioncharts.js"></script>
 		<script type="text/javascript" src="scripts/js/themes/fusioncharts.theme.fint.js"></script>
@@ -109,7 +110,7 @@
 				
 					
 				  var avgBallChart = new FusionCharts({
-					type: 'zoomline',
+					type: 'zoomlinedy',
 					renderAt: 'chart-container',
 					width: '100%',
 					height: '400',
@@ -290,9 +291,9 @@
 							</header>							
 
 							<div class="row">
-								<div class="11u 12u$(mobile)">
-									<article class="item">
-									<div style="margin-bottom:50px;">
+								<div class="12u 12u$(mobile)">
+									<article class="item bg-white">
+									<div style="margin-bottom:50px;" class="form-padding-top">
 										<input type="date" name="calendario" id="calendario" step="1" min="2013-01-01"  onchange="actualizarGrafico();"/>
 									</div>
 										<div id="chart-container"></div>

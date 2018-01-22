@@ -41,9 +41,9 @@
 						'caption'=> 'Temperatura Y Humendad',
 						'subcaption'=>$fecha,
 						"showHoverEffect"=> "1",
-						"theme"=> "hulk-light",
-						"yaxisname"=> "Number of unit sold",
-						"xaxisname"=> "Date",
+						"theme"=> "fint",
+						"yaxisname"=> "",
+						"xaxisname"=> "Fecha",
 						"forceAxisLimits"=> "1",
 						"pixelsPerPoint"=>"0",
 						"pixelsPerLabel"=> "30",
@@ -55,13 +55,18 @@
 						"scrollShowButtons"=> "1",
 						"drawCustomLegendIcon"=> "1",
 						"showAlternateHGridColor"=> "0",
-						"lineThickness"=> "1.5"				
-					),
+						"lineThickness"=> "1.5",
+                        "pYAxisName" => "Temperatura",
+                        "sYAxisName"=> "Humedad",
+                        "numberSuffix"=> "ºC",
+                        "sNumberSuffix"=> "%"
+                    ),
 					'categories' => array(array("category"=>$fechaHora)),
 					'dataset' => array(
-					array("seriesname"=>"Humedad","anchorBgColor"=>"#876EA1","data"=>$humedades),
-					array("seriesname"=>"Temperatura","anchorBgColor"=>"#72D7B2","data"=>$temperaturas)
-					)
+                        array("seriesname"=>"Temperatura","color"=>"#FF0000","anchorBgColor"=>"#FF0000","data"=>$temperaturas),
+                        array("seriesname"=>"Humedad","color"=>"#1E90FF","anchorBgColor"=>"#1E90FF","parentYAxis"=>"S","data"=>$humedades)
+
+                    )
 			),true);
 			
 			echo $someJSONObject;
