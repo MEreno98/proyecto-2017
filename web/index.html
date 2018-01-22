@@ -12,9 +12,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-		<link href="assets/css/prettify.css" rel="stylesheet">
 		<link href="css/style.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">		
 		
 		<script type="text/javascript" src="scripts/js/fusioncharts.js"></script>
 		<script type="text/javascript" src="scripts/js/themes/fusioncharts.theme.fint.js"></script>
@@ -110,8 +109,8 @@
 				
 					
 				  var avgBallChart = new FusionCharts({
-					type: 'zoomlinedy',
-					renderAt: 'chart-container',
+					  type: 'zoomlinedy',
+					  renderAt: 'chart-container',
 					width: '100%',
 					height: '400',
 					dataFormat: 'json'					
@@ -141,7 +140,7 @@
 				var confDiasSemana=getSelectValues();				
 				var confHorasEnc=getCheckBoxValues();
 				var	temperaruta=$('#temperatura').val();
-				alert(confDiasSemana.length);
+				
 				var error = false;
 				var mensaje="";
 				if(confDiasSemana.length==0){					
@@ -159,13 +158,17 @@
 					alert(mensaje);
 					return false;									
 				}else{
-					$.ajax(
-						{url: "php/insertarConfiguracionTermometro.php", type: 'POST',data: { dato: "hola",confDiasSemana: confDiasSemana,confHorasEnc:confHorasEnc , temperaruta: temperaruta} , success: function(result){
-							alert(result);
-							console.log(result);
-						}}
-					);				
-					return false;
+					var r = confirm("Si existe configuración para algun día de la semana seleccionado. Se borra dicha configuración. ¿Acepta dicha opreación?");
+					if (r == true) {
+						$.ajax(
+							{url: "php/insertarConfiguracionTermometro.php", type: 'POST',data: { dato: "hola",confDiasSemana: confDiasSemana,confHorasEnc:confHorasEnc , temperaruta: temperaruta} , success: function(result){
+								
+							}}
+						);	
+						return true;
+					} else {
+						return false;
+					}
 				}
 				
 				
@@ -194,23 +197,37 @@
 				return result;
 			}
 			
+			function contains(dato) {
+				return dato == this;
+			}
 			
-			function actulizarDatosTermostato(){
+			function actulizarDatosTermostato(){				
+				var date = new Date();
+				diaSemana = date.getDay();					
+				if(diaSemana==0){
+					diaSemana=7;
+				}	
+				
 				$.ajax(
-					{url: "php/sacarUltimaTemp.php", type: 'POST',data: { dato: "hola"} , success: function(result){
+					{url: "php/sacarDatosConfiguracionTermometro.php", type: 'POST',data: { dato: "hola",diaSemana: diaSemana } , success: function(result){
 						var resultado=result;
 						if(resultado!= "Error"){	
-							console.log(JSON.parse(resultado));
-							var json = JSON.parse(resultado);							
-							if(ultimaTemperatura != json.temperatura){								
-								ultimaTemperatura=json.temperatura;								
-								$("#tempHumHor h6").html(json.temperatura+" º C");
-							}
-							if(ultimaHumedad!=json.humedad){
-								ultimaHumedad=json.humedad;
-								$("#tempHumHor span").html(json.humedad+"%");
-							}	
+							var json =JSON.parse(resultado);
+							$("#temperarutaMax").html(json.tempraturaMax+" ºC");
 							
+							var horasActivadasArray = json.horasActi.split("|");							
+							$("#programadasHoras .valorHoras").each(function( index ) {
+								if(horasActivadasArray.some(contains,index)){
+									$(this).css("background-color","red");
+								}else{
+									$(this).css("background-color","");
+								}
+							
+								console.log( index + ": " + $( this ).text() );
+							});							
+							
+							
+							//alert(horasActivadasArray);
 						}	
 					}}
 				);
@@ -294,6 +311,9 @@
 								<div class="12u 12u$(mobile)">
 									<article class="item bg-white">
 									<div style="margin-bottom:50px;" class="form-padding-top">
+								<div class="11u 12u$(mobile)">
+									<article class="item">
+									<div style="margin-bottom:50px;">
 										<input type="date" name="calendario" id="calendario" step="1" min="2013-01-01"  onchange="actualizarGrafico();"/>
 									</div>
 										<div id="chart-container"></div>
@@ -364,30 +384,30 @@
 											<table>
 												<tr id="programadasHoras">
 													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
-													<td style="">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>
+													<td class="valorHoras">&nbsp;</td>													
+													<td class="valorHoras">&nbsp;</td>													
 													<td style="">- t1</td>
 												</tr>
 												<tr>
