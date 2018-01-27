@@ -37,4 +37,31 @@ $(document).ready(function() {
 				}
 			}
 		};
+
+		$("#btn_saveConf").click(function(){
+			var vTemperatura = $("#imp_temp").val();
+			var vDias = $("#slt_diaSemana").val();
+			var vHoras = $("#slt_horas").val();
+
+			//Comprbamos si todos los datos estan rellenos
+			if(vTemperatura.trim() === "" || vDias.length === 0 || vHoras.length === 0){
+				//Vaciamos el contenedor
+				$("#alert_container").empty();
+
+				//Añadadimos el alert
+				$("#alert_container").append(getAlert("danger","Por favor, rellene todos los datos obligatorios."));
+				return;
+			}else{
+				//Vaciamos el contenedor
+				$("#alert_container").empty();
+			}
+
+			
+		});
+
+
+		function getAlert(type,message){
+			return '<div class="alert alert-' + type + '" role="alert">' + message + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+		}
+
 });
