@@ -6,7 +6,7 @@
 				cargarGraficos(null);
 				sacarUltimaTemperaturaHumedad();				
 				setInterval(sacarUltimaTemperaturaHumedad, 3000);
-				actulizarDatosTermostato();
+				//actulizarDatosTermostato();
 			}
 			
 			function sacarUltimaTemperaturaHumedad(){
@@ -24,17 +24,37 @@
 				$.ajax(
 					{url: "php/sacarUltimaTemp.php", type: 'POST',data: { dato: "hola"} , success: function(result){
 						var resultado=result;
-						if(resultado!= "Error"){	
-							console.log(JSON.parse(resultado));
+						if(resultado!= "Error"){
+							var json = JSON.parse(resultado);
+
+							if(json.temperatura){
+								//Vaciamos los divs
+								$("#card-temperatura-act").empty();
+
+								//Añadimos los nuevos valores
+								$("#card-temperatura-act").html("Temperatura actua: "+json.temperatura + "ºC");
+							}
+
+							//Comprobamos que la humedad este vacia
+							if(json.humedad){
+								//Vaciamos los divs
+								$("#card-humedad-act").empty();
+
+								//Añadimos los nuevos valores
+								$("#card-humedad-act").append("Humedad actual: "+json.humedad + "%");
+							}
+							/*console.log(JSON.parse(resultado));
 							var json = JSON.parse(resultado);							
 							if(ultimaTemperatura != json.temperatura){								
 								ultimaTemperatura=json.temperatura;								
-								$("#tempHumHor h6").html(json.temperatura+" º C");
+								//$("#tempHumHor h6").html(json.temperatura+" º C");
+								setActualValues(json.temperatura);
 							}
 							if(ultimaHumedad!=json.humedad){
 								ultimaHumedad=json.humedad;
-								$("#tempHumHor span").html(json.humedad+"%");
-							}	
+								//$("#tempHumHor span").html(json.humedad+"%");
+								setActualValues(null, json.humedad);
+							}*/	
 							
 						}	
 					}}
