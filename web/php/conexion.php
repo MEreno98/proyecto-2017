@@ -2,7 +2,7 @@
 	
 	$servername = "localhost";
 	$username = "root";
-	$password = "root";
+	$password = "toor";
 	//$password = "";
 	$datebase="arduino";
 	// Create connection
