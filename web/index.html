@@ -1,533 +1,182 @@
-<!DOCTYPE HTML>
-<!--
-	Prologue by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+<!DOCTYPE html>
+<html lang="en">
 
-<html>
-	<head>
-		<title>Grupo 2</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<link href="css/style.css" rel="stylesheet">
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">		
-		
-		<script type="text/javascript" src="scripts/js/fusioncharts.js"></script>
-		<script type="text/javascript" src="scripts/js/themes/fusioncharts.theme.fint.js"></script>
-		<script type="text/javascript" src="scripts/js/jquery-3.2.1.min.js"></script>
-		
-		
-		<script>	
-		
-			var ultimaTemperatura="";
-			var ultimaHumedad="";
-			var diaSemana=-1;
-			function datosACargar(){				
-				ponerFechaActual();
-				cargarGraficos(null);
-				sacarUltimaTemperaturaHumedad();				
-				setInterval(sacarUltimaTemperaturaHumedad, 3000);
-				actulizarDatosTermostato();
-			}
-			
-			function sacarUltimaTemperaturaHumedad(){
-				var date = new Date();				
-				if(diaSemana != date.getDay()){
-					diaSemana = date.getDay();
-					var diaSem = diaSemana;
-					if(diaSemana==0){
-						diaSem=7;
-					}					
-					$("#diaSemana").html(diaSem);
-				}
-			
-			
-				$.ajax(
-					{url: "php/sacarUltimaTemp.php", type: 'POST',data: { dato: "hola"} , success: function(result){
-						var resultado=result;
-						if(resultado!= "Error"){	
-							console.log(JSON.parse(resultado));
-							var json = JSON.parse(resultado);							
-							if(ultimaTemperatura != json.temperatura){								
-								ultimaTemperatura=json.temperatura;								
-								$("#tempHumHor h6").html(json.temperatura+" º C");
-							}
-							if(ultimaHumedad!=json.humedad){
-								ultimaHumedad=json.humedad;
-								$("#tempHumHor span").html(json.humedad+"%");
-							}	
-							
-						}	
-					}}
-				);
-				
-			}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Control de Temperatura - Grupo 2</title>
+  <link rel="shortcut icon" href="img/favicon.png" type="image/png" />
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template-->
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <!-- Page level plugin CSS-->
+  <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/custom.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">	
+</head>
 
-		
-			function ponerFechaActual(){
-				var date = new Date();
+<body class="fixed-nav sticky-footer bg-dark" id="page-top" onload="datosACargar()">
+  <!-- Navigation-->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="index.html">Control de Temperatura</a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Estadísticas">
+          <a class="nav-link" href="index.html">
+       <i class="fa fa-fw fa-area-chart"></i>
+            <span class="nav-link-text">Estadísticas</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Termostato">
+          <a class="nav-link" href="termostato.html">
+            <i class="fa fa-fw fa-thermometer-quarter"></i>
+            <span class="nav-link-text">Termostato</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link  mr-lg-2" href="https://github.com/MEreno98/proyecto-2017" target="_blank">
+            <i class="fa fa-fw fa-github"></i>
+          </a>
+        </li>
+		  <li class="nav-item">
+          <a class="nav-link  mr-lg-2" href="https://egibide-dam.github.io/proyecto-2017/" target="_blank">
+            <i class="fa fa-fw fa-file-pdf-o"></i>
+          </a>
+        </li>
+		  <li class="nav-item">
+          <a class="nav-link  mr-lg-2" href="https://build.particle.io/build" target="_blank">
+            <i class="fa fa-fw fa-microchip"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Control de Temperatura</a>
+        </li>
+        <li class="breadcrumb-item active">Estadísticas</li>
+      </ol>
 
-				var day = date.getDate();
-				var month = date.getMonth() + 1;
-				var year = date.getFullYear();
-
-				if (month < 10) month = "0" + month;
-				if (day < 10) day = "0" + day;
-
-				var today = year + "-" + month + "-" + day;       
-				$("#calendario").attr("value", today);
-				$("#calendario").attr("max", today);
-			
-				
-			}
-		
-			function  cargarGraficos(fechaActual){				
-				var fechaString="";
-				var fecha= new Date();	
-				fechaString= fecha.getFullYear()+"-"+(((fecha.getMonth()+1)>=10)? (fecha.getMonth()+1) : '0' + (fecha.getMonth()+1))+"-"+(((fecha.getDate())>=10)? (fecha.getDate()) : '0' + (fecha.getDate()));
-				if(fechaActual != null){
-					fechaString = fechaActual;
-					
-				}				
-				
-				$.ajax(
-					{url: "php/sacarDatosGrafico.php", type: 'POST',data: { fecha: fechaString} , success: function(result){
-						var resultado=result;
-						if(resultado!= "Error"){						
-							console.log(JSON.parse(resultado));						
-							graficos(resultado);
-						}else{							
-							$("#chart-container").html("<span>No se ha encontrado <b>níngun resultado </b> para la  fecha <b>"+fechaString+"</b>.</span>");
-						}	
-					}}
-				);
-			}
-			function graficos(result){				
-				
-					
-				  var avgBallChart = new FusionCharts({
-					  type: 'zoomlinedy',
-					  renderAt: 'chart-container',
-					width: '100%',
-					height: '400',
-					dataFormat: 'json'					
-				  });
-				  avgBallChart.render();
-				  avgBallChart.setChartData(result, "json");				  
-				
-			}
-			
-			function actualizarGrafico(){				
-				cargarGraficos($("#calendario").val());				
-			}
-			
-			function mostrarOcultarProgTermos(){				
-				if($("#programarTermostato").is(':checked')){
-					$("#configurarTermostato").show();
-				}else{
-					$("#configurarTermostato").hide();
-				}
-			}
-			
-			function datosConfiguracionTermostato(){
-				
-			}
-			
-			function validarConfiguracionTermostato(){
-				var confDiasSemana=getSelectValues();				
-				var confHorasEnc=getCheckBoxValues();
-				var	temperaruta=$('#temperatura').val();
-				
-				var error = false;
-				var mensaje="";
-				if(confDiasSemana.length==0){					
-					error=true;
-					mensaje="Seleccione como mininimo un día de la semana.";					
-				}else if($('#temperatura').val()=="" || isNaN($('#temperatura').val())){					
-					error=true;
-					mensaje="Introduzca la temperatura máxima de encendido.";					
-				}else if(confHorasEnc.length==0){
-					error=true;
-					mensaje="Seleccione como mininimo una hora de encendico.";
-				}
-				
-				if(error){
-					alert(mensaje);
-					return false;									
-				}else{
-					var r = confirm("Si existe configuración para algun día de la semana seleccionado. Se borra dicha configuración. ¿Acepta dicha opreación?");
-					if (r == true) {
-						$.ajax(
-							{url: "php/insertarConfiguracionTermometro.php", type: 'POST',data: { dato: "hola",confDiasSemana: confDiasSemana,confHorasEnc:confHorasEnc , temperaruta: temperaruta} , success: function(result){
-								
-							}}
-						);	
-						return true;
-					} else {
-						return false;
-					}
-				}
-				
-				
-			}
-			
-			function getSelectValues() {
-				  var result = [];				  
-				  
-				  $('#confDiasSemana :selected').each(function(i, selectedElement) {
-					 result[i] = $(selectedElement).val();					 
-					 
-					});
-					
-				  
-				  return result;
-			}
-			
-			function getCheckBoxValues() {				
-				var result = [];				  
-				  
-				$('.horas:checked').each(function(i, selectedElement) {
-					result[i] = $(selectedElement).val();
-				});
-					
-				  
-				return result;
-			}
-			
-			function contains(dato) {
-				return dato == this;
-			}
-			
-			function actulizarDatosTermostato(){				
-				var date = new Date();
-				diaSemana = date.getDay();					
-				if(diaSemana==0){
-					diaSemana=7;
-				}	
-				
-				$.ajax(
-					{url: "php/sacarDatosConfiguracionTermometro.php", type: 'POST',data: { dato: "hola",diaSemana: diaSemana } , success: function(result){
-						var resultado=result;
-						if(resultado!= "Error"){	
-							var json =JSON.parse(resultado);
-							$("#temperarutaMax").html(json.tempraturaMax+" ºC");
-							
-							var horasActivadasArray = json.horasActi.split("|");							
-							$("#programadasHoras .valorHoras").each(function( index ) {
-								if(horasActivadasArray.some(contains,index)){
-									$(this).css("background-color","red");
-								}else{
-									$(this).css("background-color","");
-								}
-							
-								console.log( index + ": " + $( this ).text() );
-							});							
-							
-							
-							//alert(horasActivadasArray);
-						}	
-					}}
-				);
-			}
-			
-		</script>
-
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-	</head>
-	<body onload="datosACargar()">
-
-		<!-- Header -->
-			<div id="header">
-
-				<div class="top">
-
-					<!-- Logo -->
-						<div id="logo">
-							<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
-							<h1 id="title">Grupo 2</h1>
-							<p>Control Temperatura</p>
-						</div>
-
-					<!-- Nav -->
-						<nav id="nav">							
-							<ul>
-								<li><a href="#top" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Inicio</span></a></li>
-								<li><a href="#portfolio" id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Estadisticas</span></a></li>								
-								<li><a href="#contact" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-thermometer-empty">Programación temperatura</span></a></li>
-							</ul>
-						</nav>
-
+      <!-- Area Chart Example-->
+      <div class="card mb-3">
+        <div class="card-header">
+			<div class="row no-gutters">
+				<div class="col-12 col-sm-12 col-md-10">
+					<i class="fa fa-area-chart"></i> Estadísticas por día
 				</div>
-
-				<div class="bottom">
-
-					<!-- Social Icons -->
-						<ul class="icons">
-							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
-							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-							<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
-						</ul>
-
+				<div class="col-sm-12 col-md-2">
+					<input type="date" class="form-control" name="calendario" id="calendario" step="1" min="2013-01-01"  onchange="actualizarGrafico();"/>
 				</div>
-
 			</div>
-
-		<!-- Main -->
-			<div id="main">
-
-				<!-- Intro -->
-					<section id="top" class="one dark cover">
-						<div class="container">
-
-							<header>
-								<h2 class="alt">Hi! I'm <strong>Prologue</strong>, a <a href="http://html5up.net/license">free</a> responsive<br />
-								site template designed by <a href="http://html5up.net">HTML5 UP</a>.</h2>
-								<p>Ligula scelerisque justo sem accumsan diam quis<br />
-								vitae natoque dictum sollicitudin elementum.</p>
-							</header>
-
-							<footer>
-								<a href="#portfolio" class="button scrolly">Magna Aliquam</a>
-							</footer>
-
-						</div>
-					</section>
-
-				<!-- Portfolio -->
-					<section id="portfolio" class="two">
-						<div class="container">
-
-							<header>
-								<h2>Estadisticas</h2>
-							</header>							
-
-							<div class="row">
-								<div class="12u 12u$(mobile)">
-									<article class="item bg-white">
-									<div style="margin-bottom:50px;" class="form-padding-top">
-								<div class="11u 12u$(mobile)">
-									<article class="item">
-									<div style="margin-bottom:50px;">
-										<input type="date" name="calendario" id="calendario" step="1" min="2013-01-01"  onchange="actualizarGrafico();"/>
-									</div>
-										<div id="chart-container"></div>
-									</article>									
-								</div>
-								<!--<div class="4u 12u$(mobile)">
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic04.jpg" alt="" /></a>
-										<header>
-											<h3>Magna Nullam</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic05.jpg" alt="" /></a>
-										<header>
-											<h3>Natoque Vitae</h3>
-										</header>
-									</article>
-								</div>
-								<div class="4u$ 12u$(mobile)">
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic06.jpg" alt="" /></a>
-										<header>
-											<h3>Dolor Penatibus</h3>
-										</header>
-									</article>
-									<article class="item">
-										<a href="#" class="image fit"><img src="images/pic07.jpg" alt="" /></a>
-										<header>
-											<h3>Orci Convallis</h3>
-										</header>
-									</article>
-								</div>-->
-							</div>
-
-						</div>
-					</section>
-
-				
-					
-
-				<!-- Contact -->
-					<section id="contact" class="four">
-						<div class="container">
-							<header>
-								<h2>Programación Temperatura</h2>
-							</header>
-							<div class="termostatoFondo">
-								<div class="row" >
-									<div class="12u 12u$(mobile)" >	
-										<span> Día: <b id="diaSemana"></b></span>
-									</div>									
-									<div class="2u 12u$(mobile)">
-										<article class="">
-											<span id="temperarutaMax"></span>											
-										</article>
-										
-									</div>
-									<div class="8u$ 12u$(mobile)">
-										<article class="" id="tempHumHor">
-											<h6></h6>
-											<span></span>
-										</article>										
-									</div>
-									
-									<div class="12u 12u$(mobile)" >											
-										<div id="horasTemp">
-											<table>
-												<tr id="programadasHoras">
-													<td style="">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>
-													<td class="valorHoras">&nbsp;</td>													
-													<td class="valorHoras">&nbsp;</td>													
-													<td style="">- t1</td>
-												</tr>
-												<tr>
-													<td><span class="icon fa-clock-o"></span></td>
-													<td>0</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>2</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>4</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>6</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>8</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>10</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>12</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>14</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>16</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>18</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>20</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>
-													<td>22</td>
-													<td><span class="fa fa-circle" style="font-size:5px;"></span></td>													
-													<td>&nbsp;</td>
-												</tr>												
-											</table>
-										
-										
-										</div>
-									</div>
-								</div>
-							</div>	
-
-							<div class="row">
-								<div class="4u 12u$(mobile)" >	
-									<input type="checkbox" name="programar" id="programarTermostato" onclick="mostrarOcultarProgTermos();"/> <span>Programar Termostato</span>
-								</div>
-							</div>
-
-							<form id="configurarTermostato" style="display:none;" method="post" onSubmit="return validarConfiguracionTermostato();">
-								<div class="row">
-									<div id="erroresFormulario" class="12u 12u$(mobile)" data-alerts="alerts" data-titles='{"warning": "<em>Warning!</em>", "error": "<em>Error!</em>"}' data-ids="myid" data-fade="6000"></div>
-								
-								
-									<div class="6u 12u$(mobile)">
-										<select multiple id="confDiasSemana" name="confDiasSemana[]" class="inline">
-											<option value="1">Lunes</option>
-											<option value="2">Martes</option>
-											<option value="3">Miercoles</option>
-											<option value="4">Jueves</option>
-											<option value="5">Viernes</option>
-											<option value="6">Sabado</option>
-											<option value="0">Domingo</option>
-										</select>
-									</div>
-									<div class="6u$ 12u$(mobile)">
-										<input type="text" id="temperatura" placeholder="Temperatura (ºC)" />
-									</div>
-									<div class="12u$">										
-										<fieldset id="horasEncen">
-											<legend>Horas encendico Calefacción</legend>
-											<input type="checkbox" class="horas" value="0" />00:00-01:00
-											<input type="checkbox" class="horas" value="1" />01:00-02:00
-											<input type="checkbox" class="horas" value="2" />02:00-03:00
-											<input type="checkbox" class="horas" value="3" />03:00-04:00
-											<input type="checkbox" class="horas" value="4" />04:00-05:00											
-											<input type="checkbox" class="horas" value="5" />05:00-06:00
-											<input type="checkbox" class="horas" value="6" />06:00-07:00
-											<input type="checkbox" class="horas" value="7" />07:00-08:00
-											<input type="checkbox" class="horas" value="8" />08:00-09:00
-											<input type="checkbox" class="horas" value="9" />09:00-10:00
-											<input type="checkbox" class="horas" value="10" />00:00-11:00
-											<input type="checkbox" class="horas" value="11" />11:00-12:00
-											<input type="checkbox" class="horas" value="12" />12:00-13:00
-											<input type="checkbox" class="horas" value="13" />13:00-14:00
-											<input type="checkbox" class="horas" value="14" />14:00-15:00
-											<input type="checkbox" class="horas" value="15" />15:00-16:00
-											<input type="checkbox" class="horas" value="16" />16:00-17:00
-											<input type="checkbox" class="horas" value="17" />17:00-18:00
-											<input type="checkbox" class="horas" value="18" />18:00-19:00
-											<input type="checkbox" class="horas" value="19" />19:00-20:00
-											<input type="checkbox" class="horas" value="20" />20:00-21:00
-											<input type="checkbox" class="horas" value="21" />21:00-22:00
-											<input type="checkbox" class="horas" value="22" />22:00-23:00
-											<input type="checkbox" class="horas" value="23" />23:00-00:00
-										</fieldset>										
-										
-									</div>
-									<div class="12u$">
-										<button type="submit">Programar Termostato</button>
-									</div>
-								</div>
-							</form>
-
-						</div>
-					</section>
-
+		</div>
+        <div class="card-body">
+			<div id="chart-container"></div>          
+        </div>        
+      </div>	  
+	  
+      <div class="row">
+        <div class="col-lg-8">          
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fa fa-bar-chart"></i> Media por mes
+				</div>
+				<div class="card-body">              
+					<div id="chart-container1"></div> 
+				</div>            
 			</div>
+        </div>        
+      </div>
+	  
+	  <hr class="mt-2">
+      <!-- Example DataTables Card-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Temperatura y Humedad</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Temperatura</th>
+                  <th>Humedad</th>                  
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Temperatura</th>
+                  <th>Humedad</th>
+                </tr>
+              </tfoot>
+              <tbody id="datosTabla">
+                
+                
+                
+              </tbody>
+            </table>
+          </div>
+        </div>        
+      </div>
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © <strong>Control de Temperatura</strong> - Grupo 02 - 2018</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Page level plugin JavaScript-->
+    <!--<script src="vendor/chart.js/Chart.min.js"></script>-->
+    <script src="vendor/datatables/jquery.dataTables.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+    <!-- Custom scripts for this page
+    <script src="js/sb-admin-datatables.js"></script>-->
+    <!--<script src="js/sb-admin-charts.min.js"></script>-->
+	<script type="text/javascript" src="js/fusioncharts/fusioncharts.js"></script>
+	<script type="text/javascript" src="js/fusioncharts/themes/fusioncharts.theme.fint.js"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
+	<script type="text/javascript" src="js/customTermostato.js"></script>
+  </div>
+</body>
 
-		<!-- Footer -->
-			<div id="footer">
-
-				<!-- Copyright -->
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-
-			</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollzer.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			
-			
-	</body>
 </html>

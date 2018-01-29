@@ -3,7 +3,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "toor";
-	$password = "";
+	//$password = "";
 	$datebase="arduino";
 	// Create connection
 	$conn = mysqli_connect($servername, $username, $password,$datebase);
