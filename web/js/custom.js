@@ -4,9 +4,10 @@
 			function datosACargar(){				
 				ponerFechaActual();
 				cargarGraficos(null);
+				introducirDatosTabla();
 				sacarUltimaTemperaturaHumedad();				
 				setInterval(sacarUltimaTemperaturaHumedad, 3000);
-				actulizarDatosTermostato();
+				//actulizarDatosTermostato();
 			}
 			
 			function sacarUltimaTemperaturaHumedad(){
@@ -24,18 +25,40 @@
 				$.ajax(
 					{url: "php/sacarUltimaTemp.php", type: 'POST',data: { dato: "hola"} , success: function(result){
 						var resultado=result;
-						if(resultado!= "Error"){	
-							console.log(JSON.parse(resultado));
+						if(resultado!= "Error"){
+							var json = JSON.parse(resultado);
+
+							if(json.temperatura){
+								//Vaciamos los divs
+								$("#card-temperatura-act").empty();
+
+								//Añadimos los nuevos valores
+								$("#card-temperatura-act").html("Temperatura actua: "+json.temperatura + "ºC");
+							}
+
+							//Comprobamos que la humedad este vacia
+							if(json.humedad){
+								//Vaciamos los divs
+								$("#card-humedad-act").empty();
+
+								//Añadimos los nuevos valores
+								$("#card-humedad-act").append("Humedad actual: "+json.humedad + "%");
+							}
+							/*console.log(JSON.parse(resultado));
 							var json = JSON.parse(resultado);							
 							if(ultimaTemperatura != json.temperatura){								
 								ultimaTemperatura=json.temperatura;								
-								$("#tempHumHor h6").html(json.temperatura+" º C");
+								//$("#tempHumHor h6").html(json.temperatura+" º C");
+								setActualValues(json.temperatura);
 							}
 							if(ultimaHumedad!=json.humedad){
 								ultimaHumedad=json.humedad;
-								$("#tempHumHor span").html(json.humedad+"%");
-							}	
+								//$("#tempHumHor span").html(json.humedad+"%");
+								setActualValues(null, json.humedad);
+							}*/	
 							
+						}else{
+							console.log("a");
 						}	
 					}}
 				);
@@ -80,10 +103,21 @@
 						}	
 					}}
 				);
-			}
-			function graficos(result){				
 				
-					
+				$.ajax(
+					{url: "php/sacarDatosMediaGrafico.php", type: 'POST',data: { dato: "hola"} , success: function(result){
+						var resultado=result;
+						if(resultado!= "Error"){						
+							console.log(JSON.parse(resultado));						
+							grafico1(resultado);
+						}else{							
+							$("#chart-container1").html("<span>No se ha encontrado <b>níngun resultado </b>.</span>");
+						}	
+					}}
+				);
+			}
+			function graficos(result){
+				try{		
 				  var avgBallChart = new FusionCharts({
 					  type: 'zoomlinedy',
 					  renderAt: 'chart-container',
@@ -92,8 +126,26 @@
 					dataFormat: 'json'					
 				  });
 				  avgBallChart.render();
-				  avgBallChart.setChartData(result, "json");				  
-				
+				avgBallChart.setChartData(result, "json");
+				}catch(ex){
+					console.error(ex);
+				}
+			}
+			
+			function grafico1(result){	
+				try{
+				  var avgBallChart = new FusionCharts({
+					  type: 'column3d',
+					  renderAt: 'chart-container1',
+					width: '100%',
+					height: '400',
+					dataFormat: 'json'					
+				  });
+				  avgBallChart.render();
+				avgBallChart.setChartData(result, "json");
+				} catch(ex){
+					console.error(ex);
+				}
 			}
 			
 			function actualizarGrafico(){				
@@ -199,6 +251,27 @@
 								console.log( index + ": " + $( this ).text() );
 							});							
 							
+							
+							//alert(horasActivadasArray);
+						}	
+					}}
+				);
+			}
+			
+			function introducirDatosTabla(){
+				$.ajax(
+					{url: "php/sacarDatosTabla.php", type: 'POST',data: { dato: "hola" } , success: function(result){
+						var resultado=result;
+						if(resultado!= "Error"){	
+							
+							$("#datosTabla").html(resultado);
+							
+							$('#dataTable').DataTable({
+									"language": {
+										"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+									}
+								} 
+							  );
 							
 							//alert(horasActivadasArray);
 						}	
