@@ -57,6 +57,8 @@
 								setActualValues(null, json.humedad);
 							}*/	
 							
+						}else{
+							console.log("a");
 						}	
 					}}
 				);
@@ -114,7 +116,8 @@
 					}}
 				);
 			}
-			function graficos(result){						
+			function graficos(result){
+				try{		
 				  var avgBallChart = new FusionCharts({
 					  type: 'zoomlinedy',
 					  renderAt: 'chart-container',
@@ -123,10 +126,14 @@
 					dataFormat: 'json'					
 				  });
 				  avgBallChart.render();
-				  avgBallChart.setChartData(result, "json");
+				avgBallChart.setChartData(result, "json");
+				}catch(ex){
+					console.error(ex);
+				}
 			}
 			
 			function grafico1(result){	
+				try{
 				  var avgBallChart = new FusionCharts({
 					  type: 'column3d',
 					  renderAt: 'chart-container1',
@@ -135,7 +142,10 @@
 					dataFormat: 'json'					
 				  });
 				  avgBallChart.render();
-				  avgBallChart.setChartData(result, "json");
+				avgBallChart.setChartData(result, "json");
+				} catch(ex){
+					console.error(ex);
+				}
 			}
 			
 			function actualizarGrafico(){				
