@@ -3,7 +3,7 @@
 		include "conexion.php";
 		
 			
-		$sql="SELECT * FROM mediciones order by fecha desc";
+		$sql="SELECT * FROM mediciones order by fecha desc LIMIT 1000";
 		$resultado = mysqli_query($conn,$sql);	
 		
 		$numrows=mysqli_num_rows($resultado);
