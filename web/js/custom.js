@@ -4,9 +4,10 @@
 			function datosACargar(){				
 				ponerFechaActual();
 				cargarGraficos(null);
+				introducirDatosTabla();
 				sacarUltimaTemperaturaHumedad();				
 				setInterval(sacarUltimaTemperaturaHumedad, 3000);
-				actulizarDatosTermostato();
+				actulizarDatosTermostato();				
 			}
 			
 			function sacarUltimaTemperaturaHumedad(){
@@ -80,10 +81,20 @@
 						}	
 					}}
 				);
-			}
-			function graficos(result){				
 				
-					
+				$.ajax(
+					{url: "php/sacarDatosMediaGrafico.php", type: 'POST',data: { dato: "hola"} , success: function(result){
+						var resultado=result;
+						if(resultado!= "Error"){						
+							console.log(JSON.parse(resultado));						
+							grafico1(resultado);
+						}else{							
+							$("#chart-container1").html("<span>No se ha encontrado <b>níngun resultado </b>.</span>");
+						}	
+					}}
+				);
+			}
+			function graficos(result){						
 				  var avgBallChart = new FusionCharts({
 					  type: 'zoomlinedy',
 					  renderAt: 'chart-container',
@@ -92,8 +103,19 @@
 					dataFormat: 'json'					
 				  });
 				  avgBallChart.render();
-				  avgBallChart.setChartData(result, "json");				  
-				
+				  avgBallChart.setChartData(result, "json");
+			}
+			
+			function grafico1(result){	
+				  var avgBallChart = new FusionCharts({
+					  type: 'column3d',
+					  renderAt: 'chart-container1',
+					width: '100%',
+					height: '400',
+					dataFormat: 'json'					
+				  });
+				  avgBallChart.render();
+				  avgBallChart.setChartData(result, "json");
 			}
 			
 			function actualizarGrafico(){				
@@ -199,6 +221,27 @@
 								console.log( index + ": " + $( this ).text() );
 							});							
 							
+							
+							//alert(horasActivadasArray);
+						}	
+					}}
+				);
+			}
+			
+			function introducirDatosTabla(){
+				$.ajax(
+					{url: "php/sacarDatosTabla.php", type: 'POST',data: { dato: "hola" } , success: function(result){
+						var resultado=result;
+						if(resultado!= "Error"){	
+							
+							$("#datosTabla").html(resultado);
+							
+							$('#dataTable').DataTable({
+									"language": {
+										"url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+									}
+								} 
+							  );
 							
 							//alert(horasActivadasArray);
 						}	
