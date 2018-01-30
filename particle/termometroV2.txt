@@ -22,7 +22,7 @@ DHT dht(DHTPIN, DHTTYPE);
 void callback(char* topic, byte* payload, unsigned int length);
 
 //Server
-byte server[] = {85,214,126,89};
+byte server[] = {<0>,<0>,<0>,<0>};
 
 //Client
 MQTT client(server, 1883, callback);
@@ -43,7 +43,7 @@ void setup() {
 
 void loop() {
     // Wait a few seconds between measurements.
-	delay(2000);
+	delay(5000);
 
     // Reading temperature or humidity takes about 250 milliseconds!
     // Sensor readings may also be up to 2 seconds 'old' (its a 
@@ -68,5 +68,5 @@ void loop() {
 	client.publish("medicion","{\"temp\":" + String(t) + ",\"hum\":" + String(h) + "}");
  
     //Mostramos los datos
-    Particle.publish("Measurement", "Temp:" + String(t) + "ÂºC - " + "Hum: " + String(h) + "% - Date: " + Time.timeStr());
+    Particle.publish("Measurement", "Temp:" + String(t) + "ºC - " + "Hum: " + String(h) + "% - Date: " + Time.timeStr());
 }
